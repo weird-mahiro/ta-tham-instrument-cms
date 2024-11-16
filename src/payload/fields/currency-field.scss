@@ -1,0 +1,16 @@
+.field-component {
+  .label-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .span-helper {
+    margin: 0;
+    padding-bottom: 0.3125rem;
+  }
+
+  .copy-btn {
+    margin: 1rem 0rem 0rem 0rem;
+  }
+}

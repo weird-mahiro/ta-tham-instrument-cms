@@ -13,16 +13,45 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    'product-categories': ProductCategory;
+    products: Product;
+    'inventory-logs': InventoryLog;
+    orders: Order;
+    'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
+  };
+  collectionsJoins: {
+    'product-categories': {
+      relatedProducts: 'products';
+    };
+    products: {
+      inventoryLogs: 'inventory-logs';
+    };
+  };
+  collectionsSelect: {
+    users: UsersSelect<false> | UsersSelect<true>;
+    media: MediaSelect<false> | MediaSelect<true>;
+    'product-categories': ProductCategoriesSelect<false> | ProductCategoriesSelect<true>;
+    products: ProductsSelect<false> | ProductsSelect<true>;
+    'inventory-logs': InventoryLogsSelect<false> | InventoryLogsSelect<true>;
+    orders: OrdersSelect<false> | OrdersSelect<true>;
+    'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
+    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
+    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
     defaultIDType: string;
   };
   globals: {};
-  locale: null;
+  globalsSelect: {};
+  locale: 'vi' | 'en';
   user: User & {
     collection: 'users';
+  };
+  jobs?: {
+    tasks: unknown;
+    workflows?: unknown;
   };
 }
 export interface UserAuthOperations {
@@ -49,6 +78,10 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: string;
+  fullName: string;
+  roles?:
+    | ('admin.all' | 'product.read' | 'product.write' | 'order.read' | 'order.write' | 'blog.read' | 'blog.write')[]
+    | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -78,6 +111,146 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "product-categories".
+ */
+export interface ProductCategory {
+  id: string;
+  name: string;
+  relatedProducts?: {
+    docs?: (string | Product)[] | null;
+    hasNextPage?: boolean | null;
+  } | null;
+  parent?: (string | null) | ProductCategory;
+  breadcrumbs?:
+    | {
+        doc?: (string | null) | ProductCategory;
+        url?: string | null;
+        label?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products".
+ */
+export interface Product {
+  id: string;
+  isDisplayed: boolean;
+  code: string;
+  name?: string | null;
+  price?: string | null;
+  images?: (string | Media)[] | null;
+  shortDescription?: string | null;
+  category?: (string | null) | ProductCategory;
+  inventoryLogs?: {
+    docs?: (string | InventoryLog)[] | null;
+    hasNextPage?: boolean | null;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inventory-logs".
+ */
+export interface InventoryLog {
+  id: string;
+  product: string | Product;
+  type: 'import' | 'export';
+  quantity: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "orders".
+ */
+export interface Order {
+  id: string;
+  status: 'pending' | 'processing' | 'paid' | 'shipped' | 'completed' | 'cancelled' | 'refunded';
+  isStockSubtracted?: boolean | null;
+  orderItems?:
+    | {
+        product: string | Product;
+        price?: string | null;
+        quantity: number;
+        subtotal: string;
+        id?: string | null;
+      }[]
+    | null;
+  discountType: 'percentage' | 'fixed';
+  discountNumber: number;
+  totalPreDiscount?: string | null;
+  totalDiscount?: string | null;
+  grandTotal?: string | null;
+  orderNotes?: string | null;
+  billingAddress: {
+    fullName: string;
+    email: string;
+    phoneNumber: string;
+    addressLine1: string;
+    addressLine2?: string | null;
+    district: string;
+    province: string;
+    country: string;
+  };
+  shippingAddress: {
+    fullName: string;
+    phoneNumber: string;
+    addressLine1: string;
+    addressLine2?: string | null;
+    district: string;
+    province: string;
+    country: string;
+    notes?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-locked-documents".
+ */
+export interface PayloadLockedDocument {
+  id: string;
+  document?:
+    | ({
+        relationTo: 'users';
+        value: string | User;
+      } | null)
+    | ({
+        relationTo: 'media';
+        value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'product-categories';
+        value: string | ProductCategory;
+      } | null)
+    | ({
+        relationTo: 'products';
+        value: string | Product;
+      } | null)
+    | ({
+        relationTo: 'inventory-logs';
+        value: string | InventoryLog;
+      } | null)
+    | ({
+        relationTo: 'orders';
+        value: string | Order;
+      } | null);
+  globalSlug?: string | null;
+  user: {
+    relationTo: 'users';
+    value: string | User;
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -112,6 +285,170 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users_select".
+ */
+export interface UsersSelect<T extends boolean = true> {
+  fullName?: T;
+  roles?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media_select".
+ */
+export interface MediaSelect<T extends boolean = true> {
+  alt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "product-categories_select".
+ */
+export interface ProductCategoriesSelect<T extends boolean = true> {
+  name?: T;
+  relatedProducts?: T;
+  parent?: T;
+  breadcrumbs?:
+    | T
+    | {
+        doc?: T;
+        url?: T;
+        label?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products_select".
+ */
+export interface ProductsSelect<T extends boolean = true> {
+  isDisplayed?: T;
+  code?: T;
+  name?: T;
+  price?: T;
+  images?: T;
+  shortDescription?: T;
+  category?: T;
+  stockNumber?: T;
+  inventoryLogs?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inventory-logs_select".
+ */
+export interface InventoryLogsSelect<T extends boolean = true> {
+  product?: T;
+  type?: T;
+  quantity?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "orders_select".
+ */
+export interface OrdersSelect<T extends boolean = true> {
+  status?: T;
+  isStockSubtracted?: T;
+  orderItems?:
+    | T
+    | {
+        product?: T;
+        price?: T;
+        quantity?: T;
+        subtotal?: T;
+        id?: T;
+      };
+  discountType?: T;
+  discountNumber?: T;
+  totalPreDiscount?: T;
+  totalDiscount?: T;
+  grandTotal?: T;
+  orderNotes?: T;
+  billingAddress?:
+    | T
+    | {
+        fullName?: T;
+        email?: T;
+        phoneNumber?: T;
+        addressLine1?: T;
+        addressLine2?: T;
+        district?: T;
+        province?: T;
+        country?: T;
+      };
+  shippingAddress?:
+    | T
+    | {
+        copyBillingAddress?: T;
+        fullName?: T;
+        phoneNumber?: T;
+        addressLine1?: T;
+        addressLine2?: T;
+        district?: T;
+        province?: T;
+        country?: T;
+        notes?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-locked-documents_select".
+ */
+export interface PayloadLockedDocumentsSelect<T extends boolean = true> {
+  document?: T;
+  globalSlug?: T;
+  user?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-preferences_select".
+ */
+export interface PayloadPreferencesSelect<T extends boolean = true> {
+  user?: T;
+  key?: T;
+  value?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-migrations_select".
+ */
+export interface PayloadMigrationsSelect<T extends boolean = true> {
+  name?: T;
+  batch?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

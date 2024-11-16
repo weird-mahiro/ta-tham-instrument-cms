@@ -6,8 +6,13 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
-import { Users } from './collections/Users'
-import { Media } from './collections/Media'
+import { Users } from './payload/collections/Users'
+import { Media } from './payload/collections/Media'
+import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
+import { ProductCategories } from './payload/collections/ProductCategories'
+import { Products } from './payload/collections/Products'
+import { InventoryLogs } from './payload/collections/InventoryLogs'
+import { Orders } from './payload/collections/Orders'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -19,7 +24,15 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media],
+  collections: [Users, Media, ProductCategories, Products, InventoryLogs, Orders],
+  localization: {
+    locales: [
+      { label: 'Vietnamese', code: 'vi' },
+      { label: 'English', code: 'en' },
+    ],
+    defaultLocale: 'vi',
+    fallback: true,
+  },
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -31,5 +44,8 @@ export default buildConfig({
   sharp,
   plugins: [
     // storage-adapter-placeholder
+    nestedDocsPlugin({
+      collections: ['product-categories'],
+    }),
   ],
 })
