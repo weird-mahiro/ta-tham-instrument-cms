@@ -4,7 +4,7 @@ import { useField, FieldLabel, TextInput, useForm, useFormFields } from '@payloa
 import type { TextFieldClientComponent } from 'payload'
 
 import '../currency-field.scss'
-import { VNDFormat } from '@/utils/currency'
+import { VNDFormat } from '@/lib/currency'
 
 export const SubtotalComponent: TextFieldClientComponent = (props) => {
   const { path, field } = props
@@ -25,9 +25,13 @@ export const SubtotalComponent: TextFieldClientComponent = (props) => {
   useEffect(() => {
     const data = getData()
     const orderItems = data.orderItems
-    const totalPreDiscount: number = orderItems.reduce((acc: number, item: any) => {
-      return (acc += Number(item.subtotal))
-    }, 0)
+    let totalPreDiscount: number = 0
+    if (orderItems && orderItems.length > 0) {
+      totalPreDiscount = orderItems.reduce((acc: number, item: any) => {
+        return (acc += Number(item.subtotal))
+      }, 0)
+    }
+
     if (totalPreDiscount == data.totalPreDiscount) {
       return
     }

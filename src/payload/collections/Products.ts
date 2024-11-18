@@ -22,10 +22,21 @@ export const Products: CollectionConfig = {
       type: 'collapsible',
       fields: [
         {
-          name: 'isDisplayed',
-          type: 'checkbox',
-          required: true,
-          defaultValue: false,
+          type: 'row',
+          fields: [
+            {
+              name: 'isDisplayed',
+              type: 'checkbox',
+              required: true,
+              defaultValue: false,
+            },
+            {
+              name: 'isFeatured',
+              type: 'checkbox',
+              required: true,
+              defaultValue: false,
+            },
+          ],
         },
         {
           type: 'row',

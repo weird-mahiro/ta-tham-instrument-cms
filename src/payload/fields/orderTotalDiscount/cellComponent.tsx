@@ -1,7 +1,7 @@
 'use client'
 import type { DefaultCellComponentProps } from 'payload'
 
-import { VNDFormat } from '@/utils/currency'
+import { VNDFormat } from '@/lib/currency'
 import React from 'react'
 
 export const TotalDiscountComponent: React.FC<DefaultCellComponentProps> = (props) => {

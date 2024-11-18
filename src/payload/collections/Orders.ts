@@ -11,7 +11,7 @@ import { CopyBillingAddressUiField } from '../fields/orderCopyBillingAddress'
 
 const MIN_DISCOUNT_NUMBER = 0
 
-const MAX_DISCOUNT_PERCENTAGE = 0
+const MAX_DISCOUNT_PERCENTAGE = 100
 
 const MAX_CUSTOMER_NOTES = 500
 
@@ -113,9 +113,8 @@ export const Orders: CollectionConfig = {
         {
           name: 'orderItems',
           type: 'array',
-          minRows: 1,
           validate: async (val: any) => {
-            if (!val) return true
+            if (!val || val.length === 0) return 'Order items can not be empty!'
             const uniqueSet = new Set()
             for (let i = 0; i < val.length; i++) {
               if (uniqueSet.has(val[i].product)) {
@@ -184,7 +183,7 @@ export const Orders: CollectionConfig = {
                 beforeValidate: [
                   ({ siblingData }) => {
                     if (
-                      siblingData.discountType === 'percentage' &&
+                      siblingData.discountType == 'percentage' &&
                       siblingData.discountNumber > MAX_DISCOUNT_PERCENTAGE
                     ) {
                       siblingData.discountNumber = -1

@@ -142,6 +142,7 @@ export interface ProductCategory {
 export interface Product {
   id: string;
   isDisplayed: boolean;
+  isFeatured: boolean;
   code: string;
   name?: string | null;
   price?: string | null;
@@ -346,6 +347,7 @@ export interface ProductCategoriesSelect<T extends boolean = true> {
  */
 export interface ProductsSelect<T extends boolean = true> {
   isDisplayed?: T;
+  isFeatured?: T;
   code?: T;
   name?: T;
   price?: T;
