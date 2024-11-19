@@ -9,7 +9,10 @@ import './globals.css'
 const Layout = ({ children }: LayoutProps) => {
   return (
     <html>
-      <body>{children}</body>
+      <body>
+        <h1>nice</h1>
+        {children}
+      </body>
     </html>
   )
 }

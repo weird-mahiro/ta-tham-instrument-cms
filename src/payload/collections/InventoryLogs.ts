@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
-import { isAdminOrProductWrite } from '../access/isAdminOrProductWrite'
-import { isAdminOrProductRead } from '../access/isAdminOrProductRead'
+import { isAdminOrProductWrite } from '@/payload/access/isAdminOrProductWrite'
+import { isAdminOrProductRead } from '@/payload/access/isAdminOrProductRead'
 
 const typeOptions = [
   { label: 'Import', value: 'import' },

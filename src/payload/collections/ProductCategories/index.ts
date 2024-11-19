@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
-import { isAdminOrProductWrite } from '../access/isAdminOrProductWrite'
-import { isAnyone } from '../access/isAnyone'
+import { isAdminOrProductWrite } from '@/payload/access/isAdminOrProductWrite'
+import { isAnyone } from '@/payload/access/isAnyone'
 
 // read -> anyone, create
 export const ProductCategories: CollectionConfig = {
@@ -21,6 +21,12 @@ export const ProductCategories: CollectionConfig = {
       fields: [
         {
           name: 'name',
+          type: 'text',
+          required: true,
+          localized: true,
+        },
+        {
+          name: 'description',
           type: 'text',
           required: true,
           localized: true,

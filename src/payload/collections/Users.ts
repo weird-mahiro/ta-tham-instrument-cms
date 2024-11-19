@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
-import { isAdmin, isAdminFieldLevel } from '../access/isAdmin'
-import { isAdminOrSelf } from '../access/isAdminOrSelf'
+import { isAdmin, isAdminFieldLevel } from '@/payload/access/isAdmin'
+import { isAdminOrSelf } from '@/payload/access/isAdminOrSelf'
 
 // Admin -> change role access. Self -> only change Name and stuff
 const roleOptions = [

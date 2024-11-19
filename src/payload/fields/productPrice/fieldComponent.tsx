@@ -3,7 +3,7 @@ import { useField, FieldLabel, TextInput } from '@payloadcms/ui'
 import type { TextFieldClientComponent } from 'payload'
 
 import '../currency-field.scss'
-import { VNDFormat } from '@/lib/currency'
+import { VNDFormat } from '@/lib/currency-utils'
 
 export const PriceComponent: TextFieldClientComponent = (props) => {
   const { path, field } = props

@@ -1,4 +1,4 @@
-import { validatePriceString } from '@/lib/currency'
+import { validatePriceString } from '@/lib/currency-utils'
 import type { TextField } from 'payload'
 
 export const productPriceField: TextField = {

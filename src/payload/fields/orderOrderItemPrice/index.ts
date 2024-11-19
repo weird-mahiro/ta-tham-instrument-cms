@@ -1,4 +1,4 @@
-import { validatePriceString } from '@/lib/currency'
+import { validatePriceString } from '@/lib/currency-utils'
 import type { TextField } from 'payload'
 
 // Not required since will validate the price based on role
